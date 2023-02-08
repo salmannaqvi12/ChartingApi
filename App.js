@@ -57,4 +57,5 @@ app.post('/upload', upload.single('sampleFile'), (req, res) => {
   res.send('File uploaded, converted to .csv, and data stored in the database!');
 });
 
-app.listen(3000, () => console.log('Server listening on port 3000!'));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server listening on port ${port}!`));
