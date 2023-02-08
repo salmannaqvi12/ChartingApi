@@ -26,19 +26,13 @@ extended: true
 }))
 // Database connection
 const db = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'import_node',
-  password: 'Pl@112233',
+  user: 'oqwctdvxynctzx',
+  host: 'ec2-3-217-251-77.compute-1.amazonaws.com',
+  database: 'dfjosqa879ht6f',
+  password: 'edf26343c914f3174f3c5cfa3578cf53ba7b1b4756381b95d6099c90c8debf9f',
   port: 5432,
 })
 
-// const db = mysql.createConnection({
-// host: "localhost",
-// user: "root",
-// password: "",
-// database: "import_node"
-// })
 db.connect(function (err) {
 if (err) {
 return console.error('error: ' + err.message);
