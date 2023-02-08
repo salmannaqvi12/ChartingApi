@@ -7,6 +7,7 @@ const mysql = require('mysql')
 const multer = require('multer')
 const path = require('path')
 var cors = require('cors');
+const Pool = require('pg').Pool;
 app.use(cors({
     origin: '*'
   }));
@@ -24,17 +25,25 @@ app.use(bodyparser.urlencoded({
 extended: true
 }))
 // Database connection
-const db = mysql.createConnection({
-host: "localhost",
-user: "root",
-password: "",
-database: "import_node"
+const db = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'import_node',
+  password: 'Pl@112233',
+  port: 5432,
 })
+
+// const db = mysql.createConnection({
+// host: "localhost",
+// user: "root",
+// password: "",
+// database: "import_node"
+// })
 db.connect(function (err) {
 if (err) {
 return console.error('error: ' + err.message);
 }
-console.log('Connected to the MySQL server.');
+console.log('Connected to the PgSQL server.');
 })
 //! Use of Multer
 
@@ -62,7 +71,7 @@ app.get('/api/exchanges', (req, res) => {
 });  
 app.get('/api/exchanges/config', (req, res) => {
     // res.sendFile(__dirname + '/index.html');
-    db.query('SELECT value as value, name as name, descc as `desc` FROM exchanges', function (error, results, fields) {
+    db.query('SELECT value as value, name as name, descc as desc FROM exchanges', function (error, results, fields) {
         if (error) throw error;
         let resp = { supports_search: true, supports_group_request: false, supports_marks:true, supports_timescale_marks: true,supports_time:true  , exchanges: results, "symbols_types" : [{"name": "All Types", "value": ""},{"name": "Stock", "value": "stock"},{"name": "Index", "value": "Index"}], "supported_resolutions": ["D","2D","3D","W","3W","M","6M"] }
         return res.send(resp);
@@ -443,7 +452,7 @@ app.get('/api/exchanges/history', (req, res) => {
     // var resps = '';
      db.query('SELECT *  FROM history_symbol', function (error, results, fields) {
         if (error) throw error;
-        // console.log(results);
+        console.log(results);
         // cc = results;
         // resps.c = results;
         // {c:results}
@@ -454,7 +463,7 @@ app.get('/api/exchanges/history', (req, res) => {
         let o_array = [];
         let t_array = [];
         let v_array = [];
-        results.forEach( (row) => {
+        results.rows.forEach( (row) => {
             console.log(`${row.c} lives in ${row.h}`);
             c_array.push(row.c);
             h_array.push(row.h);
@@ -8883,22 +8892,38 @@ function UploadCsvDataToMySQL(filePath){
     if (error) {
     console.error(error);
     
-    let query = 'INSERT INTO exchanges (value, name, descc) VALUES ?';
+    let query = 'INSERT INTO exchanges (value, name, descc) VALUES ($1, $2, $3)';
     console.log(query)
-    
-    db.query(query, [csvData], (error, response) => {
-    console.log(error || response);
+    csvData.forEach(row => {
+      db.query(query, row, (err, res) => {
+        if (err) {
+          console.log(err.stack);
+        } else {
+          console.log("inserted " + res.rowCount + " row:", row);
+        }
+      });
     });
+    // db.query(query, [csvData], (error, response) => {
+    // console.log(error || response);
+    // });
     console.log("testing mysqlsss data",csvData);
     // return false;
     } else {
 
-    let query = 'INSERT INTO exchanges (value, name, descc) VALUES ?';
+    let query = 'INSERT INTO exchanges (value, name, descc) VALUES ($1, $2, $3)';
     console.log(query)
-    
-    db.query(query, [csvData], (error, response) => {
-    console.log(error || response);
+    csvData.forEach(row => {
+      db.query(query, row, (err, res) => {
+        if (err) {
+          console.log(err.stack);
+        } else {
+          console.log("inserted " + res.rowCount + " row:", row);
+        }
+      });
     });
+    // db.query(query, [csvData], (error, response) => {
+    // console.log(error || response);
+    // });
     }
     });
     // delete file after saving to MySQL database
