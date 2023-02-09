@@ -7,6 +7,7 @@ const mysql = require("mysql");
 const multer = require("multer");
 const path = require("path");
 var cors = require("cors");
+const dotenv = require("dotenv");
 const Pool = require("pg").Pool;
 app.use(
   cors({
@@ -30,11 +31,15 @@ app.use(
 );
 // Database connection
 const db = new Pool({
-  user: "oqwctdvxynctzx",
-  host: "ec2-3-217-251-77.compute-1.amazonaws.com",
-  database: "dfjosqa879ht6f",
-  password: "edf26343c914f3174f3c5cfa3578cf53ba7b1b4756381b95d6099c90c8debf9f",
-  port: 5432,
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD,
+  port: process.env.PGPORT,
+  ssl: {
+    require: true, 
+    rejectUnauthorized: false 
+  },
 });
 
 // const db = mysql.createConnection({
