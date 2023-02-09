@@ -3,11 +3,9 @@ const app = express();
 const bodyparser = require("body-parser");
 const fs = require("fs");
 const csv = require("fast-csv");
-const mysql = require("mysql");
 const multer = require("multer");
 const path = require("path");
 var cors = require("cors");
-const dotenv = require("dotenv");
 const Pool = require("pg").Pool;
 app.use(
   cors({
@@ -37,17 +35,10 @@ const db = new Pool({
   password: process.env.PGPASSWORD,
   port: process.env.PGPORT,
   ssl: {
-    require: true, 
-    rejectUnauthorized: false 
+    require: true,
+    rejectUnauthorized: false,
   },
 });
-
-// const db = mysql.createConnection({
-// host: "localhost",
-// user: "root",
-// password: "",
-// database: "import_node"
-// })
 db.connect(function (err) {
   if (err) {
     return console.error("error: " + err.message);

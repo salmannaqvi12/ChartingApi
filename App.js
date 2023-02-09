@@ -37,7 +37,7 @@ connectDb();
 // Set up multer to handle file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, "./uploads/");
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -47,7 +47,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Route for file upload
-app.post("/upload", upload.single("sampleFile"), (req, res) => {
+app.post("/upload", upload.single("upload"), (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file was uploaded.");
   }
