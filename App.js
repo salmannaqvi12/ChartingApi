@@ -2021,6 +2021,52 @@ app.get("/api/exchanges/history", (req, res) => {
     return res.send(new_resp);
   })
 });
+app.get("/api/exchanges/config", (req, res) => {
+  // res.sendFile(__dirname + '/index.html');
+  client.query(
+    "SELECT value as value, name as name, descc as desc FROM exchanges",
+    function (error, results, fields) {
+      if (error) throw error;
+      let resp = {
+        supports_search: true,
+        supports_group_request: false,
+        supports_marks: true,
+        supports_timescale_marks: true,
+        supports_time: true,
+        exchanges: results,
+        symbols_types: [
+          { name: "All Types", value: "" },
+          { name: "Stock", value: "stock" },
+          { name: "Index", value: "Index" },
+        ],
+        supported_resolutions: ["D", "2D", "3D", "W", "3W", "M", "6M"],
+      };
+      return res.send(resp);
+    }
+  );
+});
+
+app.get("/api/exchanges/symbols", (req, res) => {
+  let resp = {
+    name: "TSLA",
+    "exchange-traded": "None",
+    "exchange-listed": "NasdaqNM",
+    timezone: "America/New_York",
+    minmov: 1,
+    minmov2: 0,
+    pointvalue: 1,
+    session: "0930-1630",
+    has_intraday: false,
+    has_no_volume: false,
+    description: "None",
+    type: "stock",
+    supported_resolutions: ["D", "2D", "3D", "W", "3W", "M", "6M"],
+  };
+  // let resp = { "name":"AAPL","exchange-traded":"NasdaqNM","exchange-listed":"NasdaqNM","timezone":"America/New_York","minmov":1,"minmov2":0,"pointvalue":1,"session":"0930-1630","has_intraday":false,"has_no_volume":false,"description":"Apple Inc.","type":"stock", "supported_resolutions": ["D","2D","3D","W","3W","M","6M"] }
+
+  return res.send(resp);
+});
+
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
