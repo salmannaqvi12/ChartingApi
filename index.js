@@ -99,7 +99,7 @@ app.get("/api/exchanges/config", (req, res) => {
       { name: "Stock", value: "stock" },
       { name: "Index", value: "Index" },
     ],
-    supported_resolutions: ["1", "5","D", "2D", "3D", "W", "3W", "M", "6M"],
+    supported_resolutions: ["1", "5","15","60","D", "2D", "3D", "W", "3W", "M", "6M"],
   };
   return res.send(resp);
   // });
@@ -116,10 +116,10 @@ app.get("/api/exchanges/symbols", (req, res) => {
     pointvalue: 1,
     session: "0930-1630",
     has_intraday: true,
-    has_no_volume: false,
+    has_no_volume: true,
     description: "None",
     type: "stock",
-    supported_resolutions: ["1", "5","D", "2D", "3D", "W", "3W", "M", "6M"],
+    supported_resolutions: ["1", "5","15","60","D", "2D", "3D", "W", "3W", "M", "6M"],
   };
   // let resp = { "name":"AAPL","exchange-traded":"NasdaqNM","exchange-listed":"NasdaqNM","timezone":"America/New_York","minmov":1,"minmov2":0,"pointvalue":1,"session":"0930-1630","has_intraday":false,"has_no_volume":false,"description":"Apple Inc.","type":"stock", "supported_resolutions": ["D","2D","3D","W","3W","M","6M"] }
 
